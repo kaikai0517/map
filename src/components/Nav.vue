@@ -1,5 +1,5 @@
 <template>
-	<n-page-header class="sticky top-0">
+	<n-page-header class="sticky top-0 z-10">
 		<template #default>
 			<div class="text-fifth flex items-center px-5 pt-5 pb-2">
 				<div class="basis-1/3 flex gap-2 items-center" @click="handleBack">

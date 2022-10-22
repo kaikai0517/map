@@ -8,17 +8,18 @@
 		</div>
 		<n-space vertical class="px-10 mt-20 space-y-3">
 			<n-select
-				v-model:value="select.city"
+				v-model:value="selectCity"
 				:options="cityList"
 				placeholder="請選擇縣市"
 				:disabled="getListLoading"
 				size="large"
 			/>
 			<n-select
-				v-model:value="select.town"
+				v-model:value="selectTown"
 				:options="townList"
-				:disabled="!select.city || getListLoading"
+				:disabled="!selectCity || getListLoading"
 				placeholder="請選擇鄉鎮"
+				:fallback-option="trim"
 				size="large"
 			/>
 			<div class="flex justify-center mt-5">
@@ -42,17 +43,15 @@ const cityList = ref();
 
 const zipcodeList = ref();
 
-const city = localStorage.getItem("city");
-const town = localStorage.getItem("town");
+const storageCity = localStorage.getItem("city");
+const storageTown = localStorage.getItem("town");
 
-const select = reactive({
-	city: undefined,
-	town: undefined,
-});
+const selectCity= ref()
+const selectTown = ref()
 
 const townList = computed(() =>
 	zipcodeList.value
-		?.filter((item) => item.full_name.includes(select.city))
+		?.filter((item) => item.full_name.includes(selectCity.value))
 		.map((item) => {
 			return {
 				value: item.name,
@@ -83,20 +82,29 @@ const getList = async () => {
 	} catch (error) {}
 };
 const confirm = async () => {
-	if (city != select.city || town != select.town) {
-		if (select.city.includes("臺")) {
-			select.city = select.city.replace("臺", "台");
+	if(!selectTown.value) return
+	if (storageCity != selectCity.value || storageTown != selectTown.value) {
+		if (selectCity.value.includes("臺")) {
+			selectCity.value = selectCity.value.replace("臺", "台");
 		}
-		localStorage.setItem("city", select.city);
-		localStorage.setItem("town", select.town);
+		localStorage.setItem("city", selectCity.value);
+		localStorage.setItem("town", selectTown.value);
 		await googleStore.getGeolocation();
-		await googleStore.initMapInfo(select.city, select.town);
+		await googleStore.initMapInfo(selectCity.value, selectTown.value);
 		await googleStore.getDistance();
 	}
 	router.push({
 		path: "/barlist",
 	});
 };
+
+
+const trim =()=>{
+	return {
+		label:undefined,
+		value:undefined
+	}
+}
 
 onMounted(async () => {
 	await getList();
