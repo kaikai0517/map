@@ -2,9 +2,7 @@ import { defineStore } from "pinia";
 
 export const useGoogleStore = defineStore("googleStore", {
 	state: () => ({
-		link: `https://maps.googleapis.com/maps/api/js?key=${
-			import.meta.env.VITE_APP_GOOGLE_MAP_API_KEY
-		}&libraries=places`,
+		link: `https://maps.googleapis.com/maps/api/js?key=AIzaSyBG89P3nwtzZhrugoDSPSk_OkrJkSrE2IQ&libraries=places`,
 		currentPosition: {
 			lat: null,
 			lng: null,
