@@ -100,6 +100,7 @@ const confirm = async () => {
 
 
 const trim =()=>{
+	selectTown.value = undefined
 	return {
 		label:undefined,
 		value:undefined
