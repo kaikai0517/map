@@ -91,9 +91,9 @@ export const useGoogleStore = defineStore("googleStore", {
 			};
 
 			let service = new google.maps.places.PlacesService(map);
-			service.textSearch(request, this.NearbySearchCallback);
+			service.textSearch(request, this.textSearchCallback);
 		},
-		NearbySearchCallback(results, status, pagination) {
+		textSearchCallback(results, status, pagination) {
 			this.resultsArr = results;
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.getDistance();

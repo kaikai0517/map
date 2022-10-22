@@ -82,6 +82,7 @@ const getList = async () => {
 	} catch (error) {}
 };
 const confirm = async () => {
+	if(!selectTown.value) return
 	if (storageCity != selectCity.value || storageTown != selectTown.value) {
 		if (selectCity.value.includes("臺")) {
 			selectCity.value = selectCity.value.replace("臺", "台");
