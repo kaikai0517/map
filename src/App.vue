@@ -10,7 +10,6 @@
 		></Loading>
 		<router-view v-else></router-view>
 	</div>
-	<div id="map"></div>
 </template>
 
 <script setup>
@@ -20,6 +19,7 @@ const googleStore = useGoogleStore();
 
 onMounted(async () => {
 	await googleStore.initGooglemapsScript();
+	await googleStore.getGeolocation();
 });
 </script>
 <style scoped></style>
