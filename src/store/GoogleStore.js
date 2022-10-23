@@ -49,20 +49,22 @@ export const useGoogleStore = defineStore("googleStore", {
 				});
 			});
 		},
-		getDistance() {
+		getDistance(item) {
 			this.getDistanceLoading = true;
-			const destinationData = this.resultsArr.map(
-				(item) => item.formatted_address
-			);
+
 			let origin = new google.maps.LatLng(
 				this.currentPosition.lat,
 				this.currentPosition.lng
 			);
+			const callBack = (results) => {
+				item.destinationData = results.rows[0].elements[0];
+				this.getDistanceLoading = false;
+			};
 			let service = new google.maps.DistanceMatrixService();
 			service.getDistanceMatrix(
 				{
 					origins: [origin],
-					destinations: destinationData,
+					destinations: [item.formatted_address],
 					travelMode: "DRIVING",
 					// transitOptions: TransitOptions,
 					// drivingOptions: DrivingOptions,
@@ -70,20 +72,10 @@ export const useGoogleStore = defineStore("googleStore", {
 					// avoidHighways: Boolean,
 					// avoidTolls: Boolean,
 				},
-				this.getDistanceCallback
+				callBack
 			);
 		},
-		getDistanceCallback(response) {
-			for (let i = 0; i < response?.rows[0].elements.length; i++) {
-				this.resultsArr[i].destinationData = response?.rows[0].elements[i];
-			}
-			this.data = this.data.concat(this.resultsArr);
-			localStorage.removeItem("data", JSON.stringify(this.data));
-			localStorage.setItem("data", JSON.stringify(this.data));
-			this.getDistanceLoading = false;
-		},
 		initMapInfo(city, town) {
-			console.log(city, town);
 			this.initMapInfoLoading = true;
 			this.data = [];
 			let map = new google.maps.Map(document.createElement("div"));
@@ -97,7 +89,9 @@ export const useGoogleStore = defineStore("googleStore", {
 		textSearchCallback(results, status, pagination) {
 			this.resultsArr = results;
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				this.getDistance();
+				this.data = this.data.concat(results);
+				localStorage.removeItem("data", JSON.stringify(this.data));
+				localStorage.setItem("data", JSON.stringify(this.data));
 				if (pagination.hasNextPage) {
 					//最多可以取60筆資料，每次20筆
 					pagination.nextPage(); //呼叫下一頁的函式

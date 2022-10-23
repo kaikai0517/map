@@ -4,7 +4,6 @@
 			v-if="
 				googleStore.getGeolocationLoading ||
 				googleStore.initGooglemapsScriptLoading ||
-				googleStore.getDistanceLoading ||
 				googleStore.initMapInfoLoading
 			"
 		></Loading>

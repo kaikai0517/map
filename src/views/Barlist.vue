@@ -5,7 +5,12 @@
 		class="py-5 !text-white"
 		:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
 	>
-		<n-collapse default-expanded-names="1" accordion v-if="sortData.length > 0">
+		<n-collapse
+			default-expanded-names="1"
+			accordion
+			v-if="sortData.length > 0"
+			@item-header-click="getDetail"
+		>
 			<n-collapse-item
 				v-for="(item, index) in sortData"
 				:key="index"
@@ -58,9 +63,15 @@
 						<div>{{ item.formatted_address }}</div>
 					</div>
 				</div>
+				<div v-if="googleStore.getDistanceLoading" class="flex items-center">
+					<n-icon class="mx-2 ld ld-bounce" size="20" color="#ffffff">
+						<CarAlt />
+					</n-icon>
+					<div class="text-white">定位中...</div>
+				</div>
 				<div
 					class="text-white flex items-center"
-					v-if="item.destinationData?.distance?.text"
+					v-else-if="item.destinationData?.distance?.text"
 				>
 					<n-icon class="mx-2" size="20" color="#ffffff">
 						<CarAlt />
@@ -73,7 +84,7 @@
 		</n-collapse>
 		<n-empty description="查無資料" v-else class="h-full mt-[35vh]">
 			<template #extra>
-				<n-button size="small" class="text-white mt-5">
+				<n-button size="small" class="text-white mt-5" @click="goBack">
 					搜看看別的縣市
 				</n-button>
 			</template>
@@ -85,6 +96,12 @@
 import { MapPin } from "@vicons/tabler";
 import { CarAlt } from "@vicons/fa";
 import Nav from "@/components/Nav.vue";
+import { useRouter } from "vue-router";
+import { useGoogleStore } from "@/store/GoogleStore.js";
+
+const googleStore = useGoogleStore();
+
+const router = useRouter();
 
 const data = JSON.parse(localStorage.getItem("data"));
 let city = localStorage.getItem("city");
@@ -108,7 +125,6 @@ const filterData = (item) => {
 		"餐廳",
 		"民宿",
 	];
-	console.log(item);
 	for (let i = 0; i < strArr.length; i++) {
 		if (item.includes(strArr[i])) {
 			return true;
@@ -123,7 +139,7 @@ const sortData = computed(() => {
 	return data
 		.filter((item) => {
 			return (
-				item.formatted_address.includes(`${town}`) &&
+				item?.formatted_address.includes(`${town}`) &&
 				!filterData(item.name) &&
 				item.types.includes("bar")
 			);
@@ -138,6 +154,15 @@ const sortData = computed(() => {
 			};
 		});
 });
+
+const getDetail = (e) => {
+	if (sortData.value[e.name].destinationData) return;
+	googleStore.getDistance(sortData.value[e.name]);
+};
+
+const goBack = () => {
+	router.back();
+};
 </script>
 
 <style>
