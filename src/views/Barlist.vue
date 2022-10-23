@@ -5,7 +5,7 @@
 		class="py-5 !text-white"
 		:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
 	>
-		<n-collapse default-expanded-names="1" accordion>
+		<n-collapse default-expanded-names="1" accordion v-if="sortData.length > 0">
 			<n-collapse-item
 				v-for="(item, index) in sortData"
 				:key="index"
@@ -58,15 +58,26 @@
 						<div>{{ item.formatted_address }}</div>
 					</div>
 				</div>
-				<div class="text-white flex items-center">
+				<div
+					class="text-white flex items-center"
+					v-if="item.destinationData?.distance?.text"
+				>
 					<n-icon class="mx-2" size="20" color="#ffffff">
 						<CarAlt />
 					</n-icon>
 					{{ item.destinationData?.distance?.text }}
 					{{ `( ${item.destinationData?.duration?.text} ) ` }}
 				</div>
+				<div v-else class="text-white ml-10">當前位置無法定位</div>
 			</n-collapse-item>
 		</n-collapse>
+		<n-empty description="查無資料" v-else class="h-full mt-[35vh]">
+			<template #extra>
+				<n-button size="small" class="text-white mt-5">
+					搜看看別的縣市
+				</n-button>
+			</template>
+		</n-empty>
 	</div>
 </template>
 
