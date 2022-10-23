@@ -62,8 +62,8 @@
 					<n-icon class="mx-2" size="20" color="#ffffff">
 						<CarAlt />
 					</n-icon>
-					{{ item.destinationData?.distance.text }}
-					{{ `( ${item.destinationData?.duration.text} ) ` }}
+					{{ item.destinationData?.distance?.text }}
+					{{ `( ${item.destinationData?.duration?.text} ) ` }}
 				</div>
 			</n-collapse-item>
 		</n-collapse>
@@ -76,17 +76,46 @@ import { CarAlt } from "@vicons/fa";
 import Nav from "@/components/Nav.vue";
 
 const data = JSON.parse(localStorage.getItem("data"));
-const city = localStorage.getItem("city");
+let city = localStorage.getItem("city");
 const town = localStorage.getItem("town");
 
 const listRef = ref();
 
 const bodyHeight = computed(() => document.documentElement.clientHeight);
 
+const filterData = (item) => {
+	const strArr = [
+		"燒烤",
+		"燒肉",
+		"碳烤",
+		"ok",
+		"歌",
+		"KTV",
+		"烤物",
+		"居酒屋",
+		"牛郎",
+		"餐廳",
+		"民宿",
+	];
+	console.log(item);
+	for (let i = 0; i < strArr.length; i++) {
+		if (item.includes(strArr[i])) {
+			return true;
+		}
+	}
+};
+
 const sortData = computed(() => {
+	if (city.includes("臺")) {
+		city = city.replace("臺", "台");
+	}
 	return data
 		.filter((item) => {
-			return item.formatted_address.includes(`${city}${town}`);
+			return (
+				item.formatted_address.includes(`${town}`) &&
+				!filterData(item.name) &&
+				item.types.includes("bar")
+			);
 		})
 		.sort((a, b) => {
 			return b.user_ratings_total * b.rating - a.user_ratings_total * a.rating;

@@ -83,11 +83,12 @@ export const useGoogleStore = defineStore("googleStore", {
 			this.getDistanceLoading = false;
 		},
 		initMapInfo(city, town) {
+			console.log(city, town);
 			this.initMapInfoLoading = true;
 			this.data = [];
-			let map = new google.maps.Map(document.getElementById("map"));
+			let map = new google.maps.Map(document.createElement("div"));
 			let request = {
-				query: `${city}${town}酒吧`,
+				query: `"${city}${town} 酒吧"`,
 			};
 
 			let service = new google.maps.places.PlacesService(map);
