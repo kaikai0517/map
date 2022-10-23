@@ -133,9 +133,6 @@ const filterData = (item) => {
 };
 
 const sortData = computed(() => {
-	if (city.includes("臺")) {
-		city = city.replace("臺", "台");
-	}
 	return data
 		.filter((item) => {
 			return (

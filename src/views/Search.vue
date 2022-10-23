@@ -71,9 +71,6 @@ const confirm = async () => {
 		try {
 			localStorage.setItem("city", selectCity.value);
 			localStorage.setItem("town", selectTown.value);
-			if (selectCity.value.includes("臺")) {
-				selectCity.value = selectCity.value.replace("臺", "台");
-			}
 			await googleStore.initMapInfo(selectCity.value, selectTown.value);
 		} catch (error) {}
 	}
