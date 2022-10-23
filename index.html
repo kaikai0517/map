@@ -2,14 +2,29 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<link rel="icon" type="image/svg+xml" href="/vite.svg" />
+		<link rel="icon" type="image/svg+xml" href="/static/img/Pub.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="歡迎使用酒吧地圖,下班小酌一杯" />
 		<link
 			rel="stylesheet"
 			type="text/css"
 			href="https://cdn.jsdelivr.net/gh/loadingio/loading.css@v2.0.0/dist/loading.css"
 		/>
-		<title>Vite + Vue</title>
+		<title>酒吧地圖</title>
+		<!-- Google tag (gtag.js) -->
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-WY2CMSEHZ2"
+		></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+
+			gtag("config", "G-WY2CMSEHZ2");
+		</script>
 	</head>
 	<body>
 		<div id="app"></div>

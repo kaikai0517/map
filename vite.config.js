@@ -5,6 +5,7 @@ import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import { VitePWA } from "vite-plugin-pwa";
+import { createHtmlPlugin } from "vite-plugin-html";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,13 +14,21 @@ export default defineConfig({
 			registerType: "autoUpdate",
 			includeAssets: ["robots.txt"],
 			manifest: {
-				name: process.env.VITE_TITLE,
+				name: "酒吧地圖",
 				short_name: "酒吧地圖",
-				description: "酒吧地圖",
+				description: "歡迎使用酒吧地圖,下班小酌一杯",
 				theme_color: "#000000",
 			},
 		}),
 		vue(),
+		createHtmlPlugin({
+			minify: true,
+			inject: {
+				data: {
+					title: "酒吧地圖",
+				},
+			},
+		}),
 		AutoImport({
 			imports: [
 				"vue",
