@@ -11,13 +11,12 @@
 				v-model:value="selectCity"
 				:options="cityList"
 				placeholder="請選擇縣市"
-				:disabled="getListLoading"
 				size="large"
 			/>
 			<n-select
 				v-model:value="selectTown"
 				:options="townList"
-				:disabled="!selectCity || getListLoading"
+				:disabled="!selectCity"
 				placeholder="請選擇鄉鎮"
 				:fallback-option="trim"
 				size="large"
@@ -30,7 +29,8 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import cityJson from "@/assets/city.json";
+import townJson from "@/assets/town.json";
 import { WineSharp } from "@vicons/ionicons5";
 import { useGoogleStore } from "@/store/GoogleStore.js";
 import { useRouter } from "vue-router";
@@ -39,18 +39,23 @@ const googleStore = useGoogleStore();
 
 const router = useRouter();
 
-const cityList = ref();
-
-const zipcodeList = ref();
+const cityList = computed(() =>
+	cityJson.map((item) => {
+		return {
+			value: item.name,
+			label: item.name,
+		};
+	})
+);
 
 const storageCity = localStorage.getItem("city");
 const storageTown = localStorage.getItem("town");
 
-const selectCity= ref()
-const selectTown = ref()
+const selectCity = ref();
+const selectTown = ref();
 
 const townList = computed(() =>
-	zipcodeList.value
+	townJson
 		?.filter((item) => item.full_name.includes(selectCity.value))
 		.map((item) => {
 			return {
@@ -60,56 +65,30 @@ const townList = computed(() =>
 		})
 );
 
-const getListLoading = ref(false);
-
-const getList = async () => {
-	try {
-		getListLoading.value = true;
-		const city = await axios.get(
-			"https://demeter.5fpro.com/tw/zipcode/cities.json"
-		);
-		cityList.value = city.data.map((item) => {
-			return {
-				value: item.name,
-				label: item.name,
-			};
-		});
-		const { data } = await axios.get(
-			"https://demeter.5fpro.com/tw/zipcodes.json"
-		);
-		zipcodeList.value = data;
-		getListLoading.value = false;
-	} catch (error) {}
-};
 const confirm = async () => {
-	if(!selectTown.value) return
+	if (!selectTown.value) return;
 	if (storageCity != selectCity.value || storageTown != selectTown.value) {
-		if (selectCity.value.includes("臺")) {
-			selectCity.value = selectCity.value.replace("臺", "台");
-		}
-		localStorage.setItem("city", selectCity.value);
-		localStorage.setItem("town", selectTown.value);
-		await googleStore.getGeolocation();
-		await googleStore.initMapInfo(selectCity.value, selectTown.value);
-		await googleStore.getDistance();
+		try {
+			localStorage.setItem("city", selectCity.value);
+			localStorage.setItem("town", selectTown.value);
+			if (selectCity.value.includes("臺")) {
+				selectCity.value = selectCity.value.replace("臺", "台");
+			}
+			await googleStore.initMapInfo(selectCity.value, selectTown.value);
+		} catch (error) {}
 	}
 	router.push({
 		path: "/barlist",
 	});
 };
 
-
-const trim =()=>{
-	selectTown.value = undefined
+const trim = () => {
+	selectTown.value = undefined;
 	return {
-		label:undefined,
-		value:undefined
-	}
-}
-
-onMounted(async () => {
-	await getList();
-});
+		label: undefined,
+		value: undefined,
+	};
+};
 </script>
 
 <style scoped>
