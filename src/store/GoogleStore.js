@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-
 export const useGoogleStore = defineStore("googleStore", {
 	state: () => ({
 		link: `https://maps.googleapis.com/maps/api/js?key=AIzaSyBG89P3nwtzZhrugoDSPSk_OkrJkSrE2IQ&libraries=places`,
@@ -8,45 +7,25 @@ export const useGoogleStore = defineStore("googleStore", {
 			lng: null,
 		},
 		data: [],
+		detailId: "",
 		resultsArr: [],
 		city: undefined,
 		town: undefined,
+		detailData: {},
 		getGeolocationLoading: false,
 		initGooglemapsScriptLoading: false,
 		getDistanceLoading: false,
 		initMapInfoLoading: false,
+		getMapDetailLoading: false,
 	}),
 	actions: {
-		initGooglemapsScript() {
-			this.initGooglemapsScriptLoading = true;
-			return new Promise((resolve, reject) => {
-				let googleScript = document.querySelector(`script[src="${this.link}"]`);
-				if (!googleScript) {
-					googleScript = document.createElement("script");
-					googleScript.src = this.link;
-					googleScript.async = true;
-					document.head.append(googleScript);
-					googleScript.addEventListener("error", () => {
-						reject();
-						this.initGooglemapsScriptLoading = false;
-					});
-					googleScript.addEventListener("load", () => {
-						resolve();
-						this.initGooglemapsScriptLoading = false;
-					});
-				}
-			});
-		},
 		getGeolocation() {
 			this.getGeolocationLoading = true;
-			return new Promise((resolve) => {
-				navigator.geolocation.watchPosition((position) => {
-					const { latitude, longitude } = position.coords;
-					this.currentPosition.lat = latitude;
-					this.currentPosition.lng = longitude;
-					resolve();
-					this.getGeolocationLoading = false;
-				});
+			navigator.geolocation.watchPosition((position) => {
+				const { latitude, longitude } = position.coords;
+				this.currentPosition.lat = latitude;
+				this.currentPosition.lng = longitude;
+				this.getGeolocationLoading = false;
 			});
 		},
 		getDistance(item) {
@@ -85,6 +64,24 @@ export const useGoogleStore = defineStore("googleStore", {
 
 			let service = new google.maps.places.PlacesService(map);
 			service.textSearch(request, this.textSearchCallback);
+		},
+		getMapDetail(id) {
+			if (id == this.detailId) return;
+			this.getMapDetailLoading = true;
+			this.detailId = id;
+			const request = {
+				placeId: id,
+				// fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
+			};
+			let map = new google.maps.Map(document.createElement("div"));
+			let service = new google.maps.places.PlacesService(map);
+			service.getDetails(request, this.mapDetailCallback);
+		},
+		mapDetailCallback(place, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				this.detailData = place;
+				this.getMapDetailLoading = false;
+			}
 		},
 		textSearchCallback(results, status, pagination) {
 			this.resultsArr = results;
