@@ -32,50 +32,49 @@
 import cityJson from "@/assets/city.json";
 import townJson from "@/assets/town.json";
 import { WineSharp } from "@vicons/ionicons5";
-import { useGoogleStore } from "@/store/GoogleStore.js";
 import { useRouter } from "vue-router";
+import { useGoogleStore } from "@/store/GoogleStore.js";
 
 const googleStore = useGoogleStore();
 
 const router = useRouter();
 
-const cityList = computed(() =>
-	cityJson.map((item) => {
+const cityList = computed(() => {
+	return cityJson.map((item) => {
 		return {
 			value: item.name,
 			label: item.name,
 		};
-	})
-);
-
-const storageCity = localStorage.getItem("city");
-const storageTown = localStorage.getItem("town");
+	});
+});
 
 const selectCity = ref();
 const selectTown = ref();
 
-const townList = computed(() =>
-	townJson
+const townList = computed(() => {
+	return townJson
 		?.filter((item) => item.full_name.includes(selectCity.value))
 		.map((item) => {
 			return {
 				value: item.name,
 				label: item.name,
 			};
-		})
-);
+		});
+});
 
-const confirm = async () => {
+const confirm = () => {
 	if (!selectTown.value) return;
-	if (storageCity != selectCity.value || storageTown != selectTown.value) {
+	if (
+		localStorage.getItem("city") != selectCity.value ||
+		localStorage.getItem("town") != selectTown.value
+	) {
 		try {
 			localStorage.setItem("city", selectCity.value);
 			localStorage.setItem("town", selectTown.value);
-			if (selectCity.value.includes("臺")) {
-				selectCity.value = selectCity.value.replace("臺", "台");
-			}
-			await googleStore.initMapInfo(selectCity.value, selectTown.value);
-		} catch (error) {}
+			googleStore.initMapInfo(selectCity.value, selectTown.value);
+		} catch (error) {
+			console.log(error);
+		}
 	}
 	router.push({
 		path: "/barlist",

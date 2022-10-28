@@ -43,6 +43,8 @@
 
 <script setup>
 import { Pencil } from "@vicons/ionicons5";
+import "animate.css";
+import { useRouter } from "vue-router";
 import {
 	GlassCheers,
 	GlassMartiniAlt,
@@ -50,7 +52,6 @@ import {
 	WineGlassAlt,
 } from "@vicons/fa";
 import packageJson from "../../package.json";
-import { useRouter } from "vue-router";
 
 const router = useRouter();
 
