@@ -28,7 +28,9 @@
 						</div>
 						<div class="flex gap-1">
 							<div class="w-12">地址：</div>
-							<div>{{ googleStore.detailData?.formatted_address }}</div>
+							<div class="underline underline-offset-4" @click="goToGooglemap">
+								{{ googleStore.detailData?.formatted_address }}
+							</div>
 						</div>
 						<div class="flex gap-3">
 							<div>店家網站 -></div>
@@ -111,6 +113,10 @@ const goToWebsite = () => {
 };
 const handleBack = () => {
 	popupStore.detailPopupShow = false;
+};
+const goToGooglemap = () => {
+	const url = `https://www.google.com/maps/search/?api=1&query=${googleStore.detailDataPosition.lat},${googleStore.detailDataPosition.lng}&query_place_id=${googleStore.detailData.place_id}`;
+	window.open(url);
 };
 </script>
 
