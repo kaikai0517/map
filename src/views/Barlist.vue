@@ -62,11 +62,12 @@
 						<n-icon class="mx-2" size="20" color="#ffffff">
 							<MapPin />
 						</n-icon>
-						<div>
-							<div>{{ item.formatted_address }}</div>
+						<div @click="goToGooglemap">
+							<div class="underline underline-offset-4">
+								{{ item.formatted_address }}
+							</div>
 						</div>
 					</div>
-
 					<div class="text-white flex items-center justify-between">
 						<div
 							v-if="
@@ -180,12 +181,23 @@ const getDetail = (e) => {
 };
 
 const getInfo = () => {
-	googleStore.getMapDetail(sortData.value[currentData.value.name].place_id);
+	googleStore.getMapDetail(sortData.value[currentData.value.name]);
 	popupStore.detailPopupShow = true;
 };
 
 const goBack = () => {
 	router.back();
+};
+
+const goToGooglemap = () => {
+	const {
+		place_id,
+		geometry: {
+			location: { lat, lng },
+		},
+	} = sortData.value[currentData.value.name];
+	const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}&query_place_id=${place_id}`;
+	window.open(url);
 };
 </script>
 

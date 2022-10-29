@@ -12,6 +12,7 @@ export const useGoogleStore = defineStore("googleStore", {
 		city: undefined,
 		town: undefined,
 		detailData: {},
+		detailDataPosition: {},
 		getGeolocationLoading: false,
 		initGooglemapsScriptLoading: false,
 		getDistanceLoading: false,
@@ -65,12 +66,13 @@ export const useGoogleStore = defineStore("googleStore", {
 			let service = new google.maps.places.PlacesService(map);
 			service.textSearch(request, this.textSearchCallback);
 		},
-		getMapDetail(id) {
-			if (id == this.detailId) return;
+		getMapDetail(item) {
+			if (item.place_id == this.detailId) return;
 			this.getMapDetailLoading = true;
-			this.detailId = id;
+			this.detailId = item.place_id;
+			this.detailDataPosition = item.geometry.location;
 			const request = {
-				placeId: id,
+				placeId: item.place_id,
 				// fields: ['name', 'rating', 'formatted_phone_number', 'geometry']
 			};
 			let map = new google.maps.Map(document.createElement("div"));
