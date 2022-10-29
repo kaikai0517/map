@@ -50,6 +50,7 @@ const list = reactive([
 ]);
 
 const goTo = (path) => {
+	popupStore.sideMenuShow = false;
 	router.push({
 		path,
 	});
