@@ -1,8 +1,11 @@
 <template>
-	<div>
+	<div class="w-full">
 		<Nav title="版本細節"></Nav>
-		<div :class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'">
-			<n-timeline class="p-5" ref="listRef">
+		<div
+			:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
+			class="p-5"
+		>
+			<n-timeline ref="listRef">
 				<n-timeline-item
 					v-for="item in commit"
 					class="text-white"

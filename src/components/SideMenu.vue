@@ -1,9 +1,9 @@
 <template>
 	<n-drawer
-		v-model:show="show"
+		:show="popupStore.sideMenuShow"
 		placement="right"
 		class="bg-primary"
-		@after-leave="close"
+		@mask-click="close"
 		style="font-family: '手札體-繁'"
 	>
 		<n-drawer-content>
@@ -27,14 +27,12 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { WineOutline } from "@vicons/ionicons5";
-const props = defineProps({
-	show: Boolean,
-});
+import { usePopupStore } from "../store/PopupStore.js";
+
+const popupStore = usePopupStore();
 
 const route = useRoute();
 const router = useRouter();
-
-const emit = defineEmits(["update:show"]);
 
 const list = reactive([
 	{
@@ -58,7 +56,7 @@ const goTo = (path) => {
 };
 
 const close = () => {
-	emit("update:show", false);
+	popupStore.sideMenuShow = false;
 };
 </script>
 
