@@ -1,14 +1,12 @@
 <template>
-	<n-page-header class="sticky top-0 z-10">
+	<n-page-header class="sticky top-0 z-10 bg-primary">
 		<template #default>
 			<div class="text-fifth flex items-center px-5 pt-5 pb-2">
 				<div class="basis-1/3 flex gap-2 items-center" @click="handleBack">
-					<n-button class="bg-white p-1 rounded-lg scale-75">
-						<n-icon size="20">
-							<ArrowBack />
-						</n-icon>
-						<div>回上頁</div></n-button
-					>
+					<n-icon size="20">
+						<ArrowBack />
+					</n-icon>
+					<div>回上頁</div>
 				</div>
 				<div class="basis-1/3 text-center neon-text text-2xl">{{ title }}</div>
 				<div class="basis-1/3 flex justify-end">
