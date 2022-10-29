@@ -1,4 +1,5 @@
 <template>
+	<Nav></Nav>
 	<div class="h-[100vh] pt-20">
 		<div class="flex items-center text-4xl justify-center mt-20">
 			<n-icon class="mx-2" size="60" color="#ffffff">
@@ -34,6 +35,7 @@ import townJson from "@/assets/town.json";
 import { WineSharp } from "@vicons/ionicons5";
 import { useRouter } from "vue-router";
 import { useGoogleStore } from "@/store/GoogleStore.js";
+import Nav from "@/components/Nav.vue";
 
 const googleStore = useGoogleStore();
 
