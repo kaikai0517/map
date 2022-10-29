@@ -1,5 +1,6 @@
 <template>
-	<div class="w-full">
+	<Loading v-if="getCommitLoading"></Loading>
+	<div v-else>
 		<Nav title="版本細節"></Nav>
 		<div
 			:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
@@ -21,6 +22,7 @@
 <script setup>
 import axios from "axios";
 import dayjs from "dayjs";
+import Loading from "@/components/Loading.vue";
 
 const commit = ref();
 
@@ -35,11 +37,18 @@ const bodyHeight = computed(() => document.documentElement.clientHeight);
 const formateDate = (date) => {
 	return dayjs(date).format("YYYY-MM-DD HH:mm:ss");
 };
+
+const getCommitLoading = ref(false);
+
 const getCommit = async () => {
-	const { data } = await axios.get(
-		"https://api.github.com/repos/kaikai0517/map/commits"
-	);
-	commit.value = data;
+	try {
+		getCommitLoading.value = true;
+		const { data } = await axios.get(
+			"https://api.github.com/repos/kaikai0517/map/commits"
+		);
+		commit.value = data;
+		getCommitLoading.value = false;
+	} catch (error) {}
 };
 onMounted(async () => {
 	await getCommit();
