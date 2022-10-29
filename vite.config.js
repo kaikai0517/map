@@ -14,9 +14,9 @@ export default defineConfig({
 			registerType: "autoUpdate",
 			includeAssets: ["robots.txt"],
 			manifest: {
-				name: "酒吧地圖",
-				short_name: "酒吧地圖",
-				description: "歡迎使用酒吧地圖,下班小酌一杯",
+				name: "酒吧圖鑑",
+				short_name: "酒吧圖鑑",
+				description: "歡迎使用酒吧圖鑑,下班小酌一杯",
 				theme_color: "#000000",
 			},
 		}),
@@ -25,7 +25,7 @@ export default defineConfig({
 			minify: true,
 			inject: {
 				data: {
-					title: "酒吧地圖",
+					title: "酒吧圖鑑",
 				},
 			},
 		}),
