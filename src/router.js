@@ -20,6 +20,11 @@ const routes = [
 		name: "Search",
 		component: () => import("@/views/Search.vue"),
 	},
+	{
+		path: "/version",
+		name: "Version",
+		component: () => import("@/views/Version.vue"),
+	},
 ];
 
 const router = createRouter({

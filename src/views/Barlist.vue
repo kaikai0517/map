@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<Nav></Nav>
+		<Nav title="酒吧列表"></Nav>
 		<div
 			class="py-5 !text-white"
 			:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
