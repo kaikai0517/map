@@ -12,28 +12,29 @@
 				</div>
 				<div class="basis-1/3 text-center neon-text text-2xl">{{ title }}</div>
 				<div class="basis-1/3 flex justify-end">
-					<n-icon size="30" @click="show = true">
+					<n-icon size="30" @click="popupStore.sideMenuShow = true">
 						<ReorderThreeSharp />
 					</n-icon>
 				</div>
 			</div>
 		</template>
 	</n-page-header>
-	<SideMenu v-model:show="show" />
+	<SideMenu />
 </template>
 
 <script setup>
 import { ArrowBack, ReorderThreeSharp } from "@vicons/ionicons5";
 import { useRouter } from "vue-router";
 import SideMenu from "./SideMenu.vue";
+import { usePopupStore } from "../store/PopupStore.js";
+
+const popupStore = usePopupStore();
 
 const router = useRouter();
 
 const props = defineProps({
 	title: String,
 });
-
-const show = ref(false);
 
 const handleBack = () => {
 	router.back();
