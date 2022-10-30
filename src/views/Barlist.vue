@@ -31,19 +31,6 @@
 						</div>
 					</template>
 					<template #header-extra>
-						<n-gradient-text
-							:type="item?.isOpen ? 'success' : 'danger'"
-							class="mx-5"
-							:class="{ 'ld ld-breath': item.isOpen }"
-						>
-							{{
-								item?.isOpen
-									? "營業中"
-									: item?.isOpen === false
-									? "休息中"
-									: "無營業時間"
-							}}
-						</n-gradient-text>
 						<div class="flex flex-col items-end gap-3 pr-2 text-fifth">
 							<n-rate
 								readonly
@@ -169,12 +156,6 @@ const sortData = computed(() => {
 		})
 		.sort((a, b) => {
 			return b.user_ratings_total * b.rating - a.user_ratings_total * a.rating;
-		})
-		.map((item) => {
-			return {
-				...item,
-				isOpen: item.opening_hours?.open_now,
-			};
 		});
 });
 
