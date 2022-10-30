@@ -10,7 +10,13 @@
 
 		<component :is="tab"></component>
 	</div>
-	<div class="sticky bottom-0 w-full py-3">
+	<div
+		class="sticky bottom-0 w-full py-3"
+		style="
+			padding-bottom: constant(safe-area-inset-bottom); /* iOS 11.0-iOS 11.1 */
+			padding-bottom: env(safe-area-inset-bottom); /*iOS 11.2 */
+		"
+	>
 		<div class="flex">
 			<div
 				class="basis-1/2 flex items-center justify-center gap-2"
