@@ -16,10 +16,11 @@ export const useGoogleStore = defineStore("googleStore", {
 		getGeolocationLoading: false,
 		initGooglemapsScriptLoading: false,
 		getDistanceLoading: false,
-		initMapInfoLoading: false,
+		searchMapInfoLoading: false,
 		getMapDetailLoading: false,
 	}),
 	actions: {
+		// 取得當前位置
 		getGeolocation() {
 			this.getGeolocationLoading = true;
 			navigator.geolocation.watchPosition((position) => {
@@ -29,6 +30,7 @@ export const useGoogleStore = defineStore("googleStore", {
 				this.getGeolocationLoading = false;
 			});
 		},
+		// 取得店家距離
 		getDistance(item) {
 			this.getDistanceLoading = true;
 
@@ -44,7 +46,9 @@ export const useGoogleStore = defineStore("googleStore", {
 			service.getDistanceMatrix(
 				{
 					origins: [origin],
-					destinations: [item.formatted_address],
+					destinations: [
+						item.formatted_address ? item.formatted_address : item.vicinity,
+					],
 					travelMode: "DRIVING",
 					// transitOptions: TransitOptions,
 					// drivingOptions: DrivingOptions,
@@ -55,8 +59,9 @@ export const useGoogleStore = defineStore("googleStore", {
 				callBack
 			);
 		},
-		initMapInfo(city, town) {
-			this.initMapInfoLoading = true;
+		// 文字搜尋取得店家列表
+		textSearchMapInfo(city, town) {
+			this.searchMapInfoLoading = true;
 			this.data = [];
 			let map = new google.maps.Map(document.createElement("div"));
 			let request = {
@@ -64,8 +69,42 @@ export const useGoogleStore = defineStore("googleStore", {
 			};
 
 			let service = new google.maps.places.PlacesService(map);
-			service.textSearch(request, this.textSearchCallback);
+			service.textSearch(request, this.searchCallback);
 		},
+		searchCallback(results, status, pagination) {
+			this.resultsArr = results;
+			console.log(results);
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				this.data = this.data.concat(results);
+				localStorage.removeItem("data", JSON.stringify(this.data));
+				localStorage.setItem("data", JSON.stringify(this.data));
+				if (pagination.hasNextPage) {
+					//最多可以取60筆資料，每次20筆
+					pagination.nextPage(); //呼叫下一頁的函式
+				} else {
+					this.searchMapInfoLoading = false;
+				}
+			}
+		},
+		nearBySearchMapInfo(radius) {
+			this.searchMapInfoLoading = true;
+			this.data = [];
+			let origin = new google.maps.LatLng(
+				this.currentPosition.lat,
+				this.currentPosition.lng
+			);
+			let map = new google.maps.Map(document.createElement("div"), {
+				center: origin,
+			});
+			let request = {
+				location: origin,
+				radius,
+				keyword: '"酒吧"',
+			};
+			let service = new google.maps.places.PlacesService(map);
+			service.nearbySearch(request, this.searchCallback);
+		},
+		// 取得店家細節
 		getMapDetail(item) {
 			if (item.place_id == this.detailId) return;
 			this.getMapDetailLoading = true;
@@ -83,20 +122,6 @@ export const useGoogleStore = defineStore("googleStore", {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.detailData = place;
 				this.getMapDetailLoading = false;
-			}
-		},
-		textSearchCallback(results, status, pagination) {
-			this.resultsArr = results;
-			if (status == google.maps.places.PlacesServiceStatus.OK) {
-				this.data = this.data.concat(results);
-				localStorage.removeItem("data", JSON.stringify(this.data));
-				localStorage.setItem("data", JSON.stringify(this.data));
-				if (pagination.hasNextPage) {
-					//最多可以取60筆資料，每次20筆
-					pagination.nextPage(); //呼叫下一頁的函式
-				} else {
-					this.initMapInfoLoading = false;
-				}
 			}
 		},
 	},

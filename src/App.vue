@@ -2,7 +2,8 @@
 	<div id="app" class="bg-primary" style="font-family: '手札體-繁'">
 		<Loading
 			v-if="
-				(googleStore.initMapInfoLoading || googleStore.getGeolocationLoading) &&
+				(googleStore.searchMapInfoLoading ||
+					googleStore.getGeolocationLoading) &&
 				route.path != '/'
 			"
 		/>
