@@ -10,7 +10,7 @@
 
 		<component :is="tab"></component>
 	</div>
-	<div class="sticky bottom-0 w-full py-5">
+	<div class="sticky bottom-0 w-full py-3 safe-area-inset-bottom">
 		<div class="flex">
 			<div
 				class="basis-1/2 flex items-center justify-center gap-2"
