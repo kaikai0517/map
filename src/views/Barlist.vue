@@ -64,7 +64,11 @@
 						</n-icon>
 						<div @click="goToGooglemap">
 							<div class="underline underline-offset-4">
-								{{ item.formatted_address }}
+								{{
+									item.formatted_address
+										? item.formatted_address
+										: item.vicinity
+								}}
 							</div>
 						</div>
 					</div>
@@ -116,13 +120,14 @@ import { CarAlt } from "@vicons/fa";
 import Nav from "@/components/Nav.vue";
 import { useGoogleStore } from "@/store/GoogleStore.js";
 import { usePopupStore } from "@/store/PopupStore.js";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import DetailPopup from "@/components/DetailPopup/index.vue";
 
 const googleStore = useGoogleStore();
 const popupStore = usePopupStore();
 
 const router = useRouter();
+const route = useRoute();
 
 const listRef = ref();
 
@@ -155,10 +160,11 @@ const filterData = (item) => {
 const sortData = computed(() => {
 	return data
 		?.filter((item) => {
+			const hasAddress = item?.formatted_address
+				? item?.formatted_address?.includes(`${town}`)
+				: true;
 			return (
-				item?.formatted_address?.includes(`${town}`) &&
-				!filterData(item.name) &&
-				item.types?.includes("bar")
+				hasAddress && !filterData(item.name) && item.types?.includes("bar")
 			);
 		})
 		.sort((a, b) => {

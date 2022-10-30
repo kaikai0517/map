@@ -1,98 +1,75 @@
 <template>
 	<Nav></Nav>
-	<div class="h-[100vh] pt-20">
-		<div class="flex items-center text-4xl justify-center mt-20">
+	<div class="h-[100vh]">
+		<div class="flex items-center text-4xl justify-center mt-[30%]">
 			<n-icon class="mx-2" size="60" color="#ffffff">
 				<WineSharp />
 			</n-icon>
 			<div class="text-fifth neon-text">酒吧地圖</div>
 		</div>
-		<n-space vertical class="px-10 mt-20 space-y-3">
-			<n-select
-				v-model:value="selectCity"
-				:options="cityList"
-				placeholder="請選擇縣市"
-				size="large"
-			/>
-			<n-select
-				v-model:value="selectTown"
-				:options="townList"
-				:disabled="!selectCity"
-				placeholder="請選擇鄉鎮"
-				:fallback-option="trim"
-				size="large"
-			/>
-			<div class="flex justify-center mt-5">
-				<n-button class="bg-third w-[80%]" @click="confirm"> 確認 </n-button>
+
+		<component :is="tab"></component>
+	</div>
+	<div class="sticky bottom-0 w-full py-3">
+		<div class="flex">
+			<div
+				class="basis-1/2 flex items-center justify-center gap-2"
+				@click="tabChange(index)"
+				v-for="(item, index) in tabList"
+			>
+				<n-icon
+					size="20"
+					:class="{ 'ld ld-bounce': index == tabIndex }"
+					:color="index == tabIndex ? '#43e8d8' : '#ffffff'"
+				>
+					<component :is="item.icon"></component>
+				</n-icon>
+				<div :class="index == tabIndex ? 'text-[#43e8d8]' : 'text-white'">
+					{{ item.title }}
+				</div>
 			</div>
-		</n-space>
+		</div>
 	</div>
 </template>
 
 <script setup>
-import cityJson from "@/assets/city.json";
-import townJson from "@/assets/town.json";
+import { City } from "@vicons/fa";
 import { WineSharp } from "@vicons/ionicons5";
-import { useRouter } from "vue-router";
-import { useGoogleStore } from "@/store/GoogleStore.js";
+import { MapPin } from "@vicons/tabler";
 import Nav from "@/components/Nav.vue";
+import ByCity from "@/views/Search/ByCity.vue";
+import ByNear from "@/views/Search/ByNear.vue";
 
-const googleStore = useGoogleStore();
+const tabList = [
+	{ title: "區域搜尋", component: ByCity, icon: City },
+	{ title: "附近搜尋", component: ByNear, icon: MapPin },
+];
 
-const router = useRouter();
+const tab = ref(markRaw(tabList[0].component));
 
-const cityList = computed(() => {
-	return cityJson.map((item) => {
-		return {
-			value: item.name,
-			label: item.name,
-		};
-	});
-});
+const tabIndex = ref(0);
 
-const selectCity = ref();
-const selectTown = ref();
-
-const townList = computed(() => {
-	return townJson
-		?.filter((item) => item.full_name.includes(selectCity.value))
-		.map((item) => {
-			return {
-				value: item.name,
-				label: item.name,
-			};
-		});
-});
-
-const confirm = () => {
-	if (!selectTown.value) return;
-	if (
-		localStorage.getItem("city") != selectCity.value ||
-		localStorage.getItem("town") != selectTown.value
-	) {
-		try {
-			localStorage.setItem("city", selectCity.value);
-			localStorage.setItem("town", selectTown.value);
-			googleStore.initMapInfo(selectCity.value, selectTown.value);
-		} catch (error) {
-			console.log(error);
-		}
-	}
-	router.push({
-		path: "/barlist",
-	});
-};
-
-const trim = () => {
-	selectTown.value = undefined;
-	return {
-		label: undefined,
-		value: undefined,
-	};
+const tabChange = (index) => {
+	tabIndex.value = index;
+	tab.value = markRaw(tabList[index].component);
 };
 </script>
 
 <style scoped>
+.v-enter-active,
+.v-leave-active {
+	transition: opacity 1s;
+}
+
+.v-enter-from,
+.v-leave-to {
+	opacity: 0;
+}
+
+.v-enter-to,
+.v-leave-from {
+	opacity: 1;
+}
 .neon-text {
 	animation: flicker 2s linear infinite;
 }
