@@ -1,8 +1,33 @@
 <template>
-	<n-space vertical class="px-10 mt-20 space-y-3">
+	<n-space vertical class="px-10 mt-16 space-y-3">
+		<div class="flex gap-2">
+			<n-radio
+				:checked="checkedValue == 1"
+				:value="1"
+				name="location"
+				@change="handleChange"
+			>
+				當前定位
+			</n-radio>
+			<n-radio
+				:checked="checkedValue == 2"
+				:value="2"
+				name="location"
+				@change="handleChange"
+			>
+				輸入地址
+			</n-radio>
+		</div>
+
+		<n-input
+			v-model:value="address"
+			type="text"
+			placeholder="請輸入地址"
+			v-if="checkedValue == 2"
+		/>
 		<n-input-number
 			v-model:value="radius"
-			placeholder="輸入半徑"
+			placeholder="請輸入半徑"
 			:min="0"
 			:max="50000"
 		/>
@@ -22,10 +47,15 @@ const router = useRouter();
 
 const radius = ref();
 
+const address = ref();
+
+const checkedValue = ref(1);
+
 const confirm = () => {
 	if (!radius.value) return;
 	try {
-		googleStore.nearBySearchMapInfo(radius.value);
+		if (checkedValue.value == 1) address.value = "";
+		googleStore.nearBySearchMapInfo(radius.value, address.value);
 	} catch (error) {
 		console.log(error);
 	}
@@ -37,6 +67,14 @@ const confirm = () => {
 		},
 	});
 };
+
+const handleChange = (e) => {
+	checkedValue.value = e.target.value;
+};
 </script>
 
-<style></style>
+<style>
+.n-radio__label {
+	color: white !important;
+}
+</style>

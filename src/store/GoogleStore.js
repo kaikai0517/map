@@ -86,23 +86,40 @@ export const useGoogleStore = defineStore("googleStore", {
 				}
 			}
 		},
-		nearBySearchMapInfo(radius) {
+		nearBySearchMapInfo(radius, address) {
 			this.searchMapInfoLoading = true;
 			this.data = [];
-			let origin = new google.maps.LatLng(
-				this.currentPosition.lat,
-				this.currentPosition.lng
-			);
-			let map = new google.maps.Map(document.createElement("div"), {
-				center: origin,
+			let position = {};
+			let getLocation = new Promise((resolve, reject) => {
+				if (address) {
+					let geocoder = new google.maps.Geocoder();
+					geocoder.geocode({ address: address }, (results, status) => {
+						if (status == google.maps.GeocoderStatus.OK) {
+							position.lat = results[0].geometry.location.lat();
+							position.lng = results[0].geometry.location.lng();
+							resolve();
+						} else {
+							reject();
+						}
+					});
+				} else {
+					position = this.currentPosition;
+					resolve();
+				}
 			});
-			let request = {
-				location: origin,
-				radius,
-				keyword: '"酒吧"',
-			};
-			let service = new google.maps.places.PlacesService(map);
-			service.nearbySearch(request, this.searchCallback);
+			getLocation.then(() => {
+				let origin = new google.maps.LatLng(position.lat, position.lng);
+				let map = new google.maps.Map(document.createElement("div"), {
+					center: origin,
+				});
+				let request = {
+					location: origin,
+					radius,
+					keyword: '"酒吧"',
+				};
+				let service = new google.maps.places.PlacesService(map);
+				service.nearbySearch(request, this.searchCallback);
+			});
 		},
 		// 取得店家細節
 		getMapDetail(item) {
