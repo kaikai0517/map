@@ -9,11 +9,15 @@
 		<n-drawer-content>
 			<n-list class="bg-primary text-white">
 				<n-list-item v-for="item in list" @click="goTo(item.path)">
-					<div class="flex justify-between items-center">
+					<div
+						class="flex justify-between items-center"
+						:class="{ 'text-[#43e8d8]': route.path == item.path }"
+					>
 						{{ item.name }}
 						<n-icon
 							size="20"
 							:class="{ 'ld ld-bounce': route.path == item.path }"
+							:color="{ '#43e8d8': route.path == item.path }"
 						>
 							<WineOutline />
 						</n-icon>
