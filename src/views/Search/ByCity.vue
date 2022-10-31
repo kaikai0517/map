@@ -1,5 +1,5 @@
 <template>
-	<n-space vertical class="px-10 mt-20 space-y-3">
+	<n-space vertical class="px-10 mt-16 space-y-3">
 		<n-select
 			v-model:value="selectCity"
 			:options="cityList"
