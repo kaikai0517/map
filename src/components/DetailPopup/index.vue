@@ -56,12 +56,27 @@
 					</n-carousel> -->
 					<div class="text-white space-y-5">
 						<div class="text-2xl">營業時間：</div>
-						<div>
+						<div class="space-y-2">
 							<div
 								v-for="item in googleStore.detailData?.opening_hours
 									?.weekday_text"
+								class="flex gap-7"
 							>
 								{{ item }}
+								<div
+									v-if="item.includes(weekObj[now])"
+									:class="
+										googleStore.detailData?.opening_hours.isOpen()
+											? 'text-[#73B839] ld ld-breath'
+											: 'text-[#FF2400]'
+									"
+								>
+									{{
+										googleStore.detailData?.opening_hours.isOpen()
+											? "營業中"
+											: "休息中"
+									}}
+								</div>
 							</div>
 						</div>
 
@@ -94,10 +109,23 @@
 import { useGoogleStore } from "../../store/GoogleStore.js";
 import Loading from "../Loading.vue";
 import { usePopupStore } from "../../store/PopupStore.js";
+import dayjs from "dayjs";
 
 const popupStore = usePopupStore();
 
 const googleStore = useGoogleStore();
+
+const now = dayjs().format("ddd");
+
+const weekObj = reactive({
+	Mon: "一",
+	Tue: "二",
+	Wed: "三",
+	Thu: "四",
+	Fri: "五",
+	Sat: "六",
+	Sun: "日",
+});
 
 const formatData = computed(() => {
 	return googleStore.detailData.reviews?.map((item) => {

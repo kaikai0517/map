@@ -17,7 +17,7 @@
 						<n-icon
 							size="20"
 							:class="{ 'ld ld-bounce': route.path == item.path }"
-							:color="{ '#43e8d8': route.path == item.path }"
+							:color="route.path == item.path ? '#43e8d8' : '#ffffff'"
 						>
 							<WineOutline />
 						</n-icon>
