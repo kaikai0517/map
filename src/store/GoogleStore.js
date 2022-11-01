@@ -6,6 +6,7 @@ export const useGoogleStore = defineStore("googleStore", {
 			lat: null,
 			lng: null,
 		},
+		searchType: "",
 		data: [],
 		detailId: "",
 		resultsArr: [],
@@ -60,12 +61,14 @@ export const useGoogleStore = defineStore("googleStore", {
 			);
 		},
 		// 文字搜尋取得店家列表
-		textSearchMapInfo(city, town) {
+		textSearchMapInfo(str) {
 			this.searchMapInfoLoading = true;
 			this.data = [];
 			let map = new google.maps.Map(document.createElement("div"));
+			console.log(str);
 			let request = {
-				query: `"${city}${town} 酒吧"`,
+				type: ["bar"],
+				query: `"${str}酒吧"`,
 			};
 
 			let service = new google.maps.places.PlacesService(map);
@@ -73,7 +76,7 @@ export const useGoogleStore = defineStore("googleStore", {
 		},
 		searchCallback(results, status, pagination) {
 			this.resultsArr = results;
-			console.log(results);
+			console.log(status);
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.data = this.data.concat(results);
 				localStorage.removeItem("data", JSON.stringify(this.data));
@@ -84,6 +87,8 @@ export const useGoogleStore = defineStore("googleStore", {
 				} else {
 					this.searchMapInfoLoading = false;
 				}
+			} else {
+				this.searchMapInfoLoading = false;
 			}
 		},
 		nearBySearchMapInfo(radius, address) {
@@ -138,8 +143,8 @@ export const useGoogleStore = defineStore("googleStore", {
 		mapDetailCallback(place, status) {
 			if (status == google.maps.places.PlacesServiceStatus.OK) {
 				this.detailData = place;
-				this.getMapDetailLoading = false;
 			}
+			this.getMapDetailLoading = false;
 		},
 	},
 });

@@ -13,17 +13,26 @@
 	<div class="sticky bottom-0 w-full pb-7 pt-5">
 		<div class="flex">
 			<div
-				class="basis-1/2 flex items-center justify-center gap-2"
+				class="basis-1/3 flex items-center justify-center gap-2"
 				@click="tabChange(index)"
 				v-for="(item, index) in tabList"
 			>
-				<n-icon
-					size="20"
-					:class="{ 'ld ld-bounce': index == tabIndex }"
-					:color="index == tabIndex ? '#43e8d8' : '#ffffff'"
+				<n-tooltip
+					placement="top-start"
+					:show="index == 2 ? true : false"
+					trigger="hover"
 				>
-					<component :is="item.icon"></component>
-				</n-icon>
+					<template #trigger>
+						<n-icon
+							size="20"
+							:class="{ 'ld ld-bounce': index == tabIndex }"
+							:color="index == tabIndex ? '#43e8d8' : '#ffffff'"
+						>
+							<component :is="item.icon"></component>
+						</n-icon>
+					</template>
+					台北專屬
+				</n-tooltip>
 				<div :class="index == tabIndex ? 'text-[#43e8d8]' : 'text-white'">
 					{{ item.title }}
 				</div>
@@ -36,13 +45,16 @@
 import { City } from "@vicons/fa";
 import { WineSharp } from "@vicons/ionicons5";
 import { MapPin } from "@vicons/tabler";
+import { TrainFilled } from "@vicons/material";
 import Nav from "@/components/Nav.vue";
 import ByCity from "@/views/Search/ByCity.vue";
 import ByNear from "@/views/Search/ByNear.vue";
+import ByMRT from "@/views/Search/ByMRT.vue";
 
 const tabList = [
 	{ title: "區域搜尋", component: ByCity, icon: City },
 	{ title: "附近搜尋", component: ByNear, icon: MapPin },
+	{ title: "捷運搜尋", component: ByMRT, icon: TrainFilled },
 ];
 
 const tab = ref(markRaw(tabList[0].component));
