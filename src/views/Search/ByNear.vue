@@ -59,7 +59,10 @@ const confirm = () => {
 	} catch (error) {
 		console.log(error);
 	}
-
+	googleStore.searshType = "near";
+	localStorage.removeItem("city");
+	localStorage.removeItem("town");
+	localStorage.removeItem("station");
 	router.push({
 		path: "/barlist",
 		query: {

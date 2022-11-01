@@ -62,11 +62,13 @@ const confirm = () => {
 		try {
 			localStorage.setItem("city", selectCity.value);
 			localStorage.setItem("town", selectTown.value);
-			googleStore.textSearchMapInfo(selectCity.value, selectTown.value);
+			googleStore.textSearchMapInfo(`${selectCity.value}${selectTown.value}`);
 		} catch (error) {
 			console.log(error);
 		}
 	}
+	googleStore.searshType = "city";
+	localStorage.removeItem("station");
 	router.push({
 		path: "/barlist",
 		query: {

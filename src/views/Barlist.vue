@@ -147,11 +147,14 @@ const filterData = (item) => {
 const sortData = computed(() => {
 	return data
 		?.filter((item) => {
-			const hasAddress = item?.formatted_address
-				? item?.formatted_address?.includes(`${town}`)
-				: true;
+			const filterErrAddress =
+				googleStore.searshType == "city"
+					? item?.formatted_address?.includes(`${town}`)
+					: true;
 			return (
-				hasAddress && !filterData(item.name) && item.types?.includes("bar")
+				filterErrAddress &&
+				!filterData(item.name) &&
+				item.types?.includes("bar")
 			);
 		})
 		.sort((a, b) => {
