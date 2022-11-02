@@ -3,6 +3,7 @@
 		<Nav title="酒吧列表"></Nav>
 		<div
 			class="py-5 !text-white"
+			ref="listRef"
 			:class="listRef?.clientHeight < bodyHeight ? 'h-[100vh]' : 'h-full'"
 		>
 			<n-collapse
@@ -10,7 +11,6 @@
 				accordion
 				v-if="sortData?.length > 0"
 				@item-header-click="getDetail"
-				ref="listRef"
 			>
 				<n-collapse-item
 					v-for="(item, index) in sortData"
