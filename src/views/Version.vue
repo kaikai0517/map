@@ -53,13 +53,13 @@ const formateDate = (date) => {
 };
 
 const page = ref(1);
-const finish = ref(false);
+
 const getCommit = async () => {
 	try {
 		loadingBar.start();
 
 		const octokit = new Octokit({
-			auth: "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",
+			auth: "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",
 		});
 
 		const { data } = await octokit.request(
