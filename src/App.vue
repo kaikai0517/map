@@ -7,7 +7,9 @@
 				route.path != '/'
 			"
 		/>
-		<router-view v-else></router-view>
+		<n-loading-bar-provider v-else>
+			<router-view></router-view>
+		</n-loading-bar-provider>
 	</div>
 </template>
 
