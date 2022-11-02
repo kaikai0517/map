@@ -22,7 +22,7 @@
 <script setup>
 import dayjs from "dayjs";
 import { useLoadingBar } from "naive-ui";
-import { Octokit } from "https://cdn.skypack.dev/octokit";
+import axios from "axios";
 
 const loadingBar = useLoadingBar();
 
@@ -58,14 +58,14 @@ const getCommit = async () => {
 	try {
 		loadingBar.start();
 
-		const octokit = new Octokit({
-			auth: "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",
-		});
-
-		const { data } = await octokit.request(
-			"GET https://api.github.com/repos/kaikai0517/map/commits",
+		const { data } = await axios.get(
+			"https://api.github.com/repos/kaikai0517/map/commits",
 			{
-				page: page.value,
+				params: {
+					client_id: import.meta.env.VITE_CLIENT_ID,
+					client_secret: import.meta.env.VITE_CLIENT_SECRET,
+					page: page.value,
+				},
 			}
 		);
 		commit.value = commit.value.concat(data);
