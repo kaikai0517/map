@@ -17,25 +17,25 @@
 				@click="tabChange(index)"
 				v-for="(item, index) in tabList"
 			>
+				<n-icon
+					size="20"
+					:class="{ 'ld ld-bounce': index == tabIndex }"
+					:color="index == tabIndex ? '#43e8d8' : '#ffffff'"
+				>
+					<component :is="item.icon"></component>
+				</n-icon>
 				<n-tooltip
-					placement="top-start"
+					class="scale-75"
 					:show="index == 2 ? true : false"
 					trigger="hover"
 				>
 					<template #trigger>
-						<n-icon
-							size="20"
-							:class="{ 'ld ld-bounce': index == tabIndex }"
-							:color="index == tabIndex ? '#43e8d8' : '#ffffff'"
-						>
-							<component :is="item.icon"></component>
-						</n-icon>
+						<div :class="index == tabIndex ? 'text-[#43e8d8]' : 'text-white'">
+							{{ item.title }}
+						</div>
 					</template>
 					台北專屬
 				</n-tooltip>
-				<div :class="index == tabIndex ? 'text-[#43e8d8]' : 'text-white'">
-					{{ item.title }}
-				</div>
 			</div>
 		</div>
 	</div>
