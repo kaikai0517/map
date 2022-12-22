@@ -1,7 +1,14 @@
-# Vue 3 + Vite
+網站：https://map-black.vercel.app/
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-## Recommended IDE Setup
+主要功能：
+利用vue3與google map api製作一個酒吧搜尋網站
+並利用github api 顯示版本內容
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+
+主要使用技術
+
+* vue3
+* googlemap api
+* github api
+* tailwindcss
